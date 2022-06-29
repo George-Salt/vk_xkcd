@@ -45,8 +45,9 @@ def get_upload_url(token, group_id, version):
 
     response = requests.get(url, params=params)
     response.raise_for_status()
-    check_response(response.json())
-    return response.json()["response"]["upload_url"]
+    answer = response.json()
+    check_response(answer)
+    return answer["response"]["upload_url"]
 
 
 def upload_to_server(token, group_id, version, filename):
@@ -58,8 +59,8 @@ def upload_to_server(token, group_id, version, filename):
 
         response = requests.post(url, files=files)
         response.raise_for_status()
-    check_response(response.json())
     answer = response.json()
+    check_response(answer)
     server = answer["server"]
     response_hash = answer["hash"]
     photo = answer["photo"]
@@ -71,18 +72,19 @@ def save_photo_to_wall(token, group_id, version, filename):
     server, response_hash, photo = upload_to_server(token, group_id, version, filename)
 
     params = {
-        #"access_token": token,
-        #"photo": photo,
+        "access_token": token,
+        "photo": photo,
         "v": version,
         "group_id": group_id,
-        #"server": server,
+        "server": server,
         "hash": response_hash
     }
 
     response = requests.post(url, params=params)
     response.raise_for_status()
-    check_response(response.json())
-    return response.json()
+    answer = response.json()
+    check_response(answer)
+    return answer
 
 
 def publish_to_group(token, group_id, version, filename, comment, comic_num):
